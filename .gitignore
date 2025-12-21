@@ -1,0 +1,23 @@
+# Dependencies
+client/node_modules/
+server/node_modules/
+
+# Environment
+server/.env
+server/.env.local
+server/.env.*.local
+
+# Testing
+coverage/
+
+# Production
+server/build/
+client/dist/
+
+# Misc
+.DS_Store
+*.log
+
+# IDEs
+.vscode/
+.idea/
