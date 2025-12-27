@@ -7,6 +7,9 @@ import Skills from './pages/Skills';
 import Roles from './pages/Roles';
 import Learning from './pages/Learning';
 import Profile from './pages/Profile';
+import ResourceRecommendations from './pages/ResourceRecommendations';
+import PsychometricTest from './pages/PsychometricTest';
+import PsychometricResult from './pages/PsychometricResult';
 
 const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
@@ -32,6 +35,9 @@ function App() {
                     <Route path="/roles" element={<PrivateRoute><Roles /></PrivateRoute>} />
                     <Route path="/learning" element={<PrivateRoute><Learning /></PrivateRoute>} />
                     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                    <Route path="/recommendations" element={<PrivateRoute><ResourceRecommendations /></PrivateRoute>} />
+                    <Route path="/psychometric-test" element={<PrivateRoute><PsychometricTest /></PrivateRoute>} />
+                    <Route path="/psychometric-result" element={<PrivateRoute><PsychometricResult /></PrivateRoute>} />
                     <Route path="/" element={<Navigate to="/dashboard" />} />
                 </Routes>
             </Router>

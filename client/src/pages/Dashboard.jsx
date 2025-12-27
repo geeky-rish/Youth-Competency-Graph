@@ -2,25 +2,28 @@ import { useEffect, useState } from 'react';
 import api from '../services/api'; // Use centralized API
 import Layout from '../components/Layout';
 import { useAuth } from '../context/AuthContext';
-import { TrendingUp, BookOpen, AlertCircle, Award, ArrowRight, Target } from 'lucide-react';
+import { TrendingUp, BookOpen, AlertCircle, Award, ArrowRight, Target, Brain } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
     const { user } = useAuth();
     const [roleFit, setRoleFit] = useState([]);
     const [nextSkills, setNextSkills] = useState([]);
+    const [psychometricAttempt, setPsychometricAttempt] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [roleFitRes, nextSkillsRes] = await Promise.all([
+                const [roleFitRes, nextSkillsRes, psychometricRes] = await Promise.all([
                     api.get('/recommendations/role-fit'),
-                    api.get('/recommendations/next-skills')
+                    api.get('/recommendations/next-skills'),
+                    api.get('/psychometric/history').catch(() => ({ data: null }))
                 ]);
 
                 setRoleFit(roleFitRes.data);
                 setNextSkills(nextSkillsRes.data);
+                setPsychometricAttempt(psychometricRes.data);
             } catch (error) {
                 console.error("Error fetching dashboard data", error);
             } finally {
@@ -65,6 +68,23 @@ const Dashboard = () => {
                     <div className="absolute bottom-0 right-20 w-32 h-32 bg-indigo-300 opacity-20 rounded-full blur-xl"></div>
                 </div>
 
+                {/* Resource Recommendations Card */}
+                <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 shadow-sm border border-gray-700 flex flex-col justify-between relative overflow-hidden group">
+                    <div className="relative z-10">
+                        <h3 className="text-lg font-semibold text-white mb-2 flex items-center">
+                            <BookOpen className="w-5 h-5 text-blue-400 mr-2" />
+                            Curated For You
+                        </h3>
+                        <p className="text-gray-400 text-sm mb-4">
+                            Resources tailored to your skill gaps and target roles.
+                        </p>
+                        <Link to="/recommendations" className="inline-flex items-center text-blue-400 font-medium hover:text-blue-300 transition">
+                            View Recommendations <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </div>
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500 opacity-10 rounded-full blur-2xl -mr-8 -mt-8"></div>
+                </div>
+
                 {/* Quick Stats */}
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col justify-center">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -81,6 +101,42 @@ const Dashboard = () => {
                             <span className="text-2xl font-bold text-gray-800">{user?.targetRoles?.length || 0}</span>
                         </div>
                     </div>
+                </div>
+
+                {/* Psychometric Assessment Card */}
+                <div className="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-xl p-6 shadow-sm border border-indigo-700 text-white flex flex-col justify-between relative overflow-hidden">
+                    <div className="relative z-10">
+                        <h3 className="text-lg font-semibold mb-2 flex items-center">
+                            <Brain className="w-5 h-5 text-purple-300 mr-2" />
+                            Aptitude Profile
+                        </h3>
+
+                        {psychometricAttempt ? (
+                            <div className="mb-4">
+                                <div className="flex items-end mb-1">
+                                    <span className="text-3xl font-bold">{psychometricAttempt.totalScore}%</span>
+                                    <span className="text-sm text-indigo-300 ml-2 mb-1">Score</span>
+                                </div>
+                                <p className="text-xs text-indigo-200 line-clamp-2">
+                                    {psychometricAttempt.suitabilityInsights?.analytical_strength || "Analysis complete"}
+                                </p>
+                            </div>
+                        ) : (
+                            <p className="text-indigo-200 text-sm mb-4">
+                                Discover your cognitive strengths and work style.
+                            </p>
+                        )}
+
+                        <Link
+                            to={psychometricAttempt ? "/psychometric-result" : "/psychometric-test"}
+                            state={psychometricAttempt ? { result: { score: psychometricAttempt.totalScore, sectionScores: psychometricAttempt.sectionScores, insights: psychometricAttempt.suitabilityInsights } } : {}}
+                            className="inline-flex items-center text-purple-300 font-medium hover:text-white transition"
+                        >
+                            {psychometricAttempt ? "View Insights" : "Start Assessment"}
+                            <ArrowRight className="w-4 h-4 ml-1" />
+                        </Link>
+                    </div>
+                    <div className="absolute bottom-0 right-0 w-32 h-32 bg-purple-500 opacity-20 rounded-full blur-2xl -mr-10 -mb-10"></div>
                 </div>
             </div>
 
@@ -99,13 +155,13 @@ const Dashboard = () => {
                                     <div className="flex justify-between mb-1">
                                         <span className="text-sm font-medium text-gray-700">{role.roleName}</span>
                                         <span className={`text-sm font-medium ${role.readinessScore >= 80 ? 'text-green-600' :
-                                                role.readinessScore >= 50 ? 'text-yellow-600' : 'text-red-500'
+                                            role.readinessScore >= 50 ? 'text-yellow-600' : 'text-red-500'
                                             }`}>{role.readinessScore}%</span>
                                     </div>
                                     <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
                                         <div
                                             className={`h-2.5 rounded-full transition-all duration-500 ${role.readinessScore >= 80 ? 'bg-green-500' :
-                                                    role.readinessScore >= 50 ? 'bg-yellow-400' : 'bg-red-400'
+                                                role.readinessScore >= 50 ? 'bg-yellow-400' : 'bg-red-400'
                                                 }`}
                                             style={{ width: `${role.readinessScore}%` }}
                                         ></div>

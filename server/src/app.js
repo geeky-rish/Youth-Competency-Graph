@@ -8,6 +8,7 @@ const roleRoutes = require('./routes/roleRoutes');
 const learningRoutes = require('./routes/learningRoutes');
 const recommendationRoutes = require('./routes/recommendationRoutes');
 const graphRoutes = require('./routes/graphRoutes');
+const resourceRoutes = require('./routes/resourceRoutes');
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/learning', learningRoutes);
 app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/graph', graphRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/psychometric', require('./routes/psychometricRoutes'));
 
 const { errorHandler } = require('./middleware/errorMiddleware');
 
