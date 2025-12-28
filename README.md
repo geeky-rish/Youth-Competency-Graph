@@ -1,7 +1,6 @@
 # Youth Competency Intelligence Graph 🚀
 
 ![Project Status](https://img.shields.io/badge/status-active-success.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Tech Stack](https://img.shields.io/badge/stack-MERN-blueviolet.svg)
 
 ## 📖 Overview
@@ -107,14 +106,6 @@ Follow these steps to set up the project locally.
 
 4.  **Access the Application**
     - Open your browser and navigate to `http://localhost:5173`.
-
-## 📸 Screenshots
-
-*(Add your screenshots here to make the resume stand out!)*
-
-| Dashboard | Learning Path |
-|:---:|:---:|
-| ![Dashboard Placeholder](https://via.placeholder.com/600x300?text=Dashboard+UI) | ![Graph Placeholder](https://via.placeholder.com/600x300?text=Interactive+Graph) |
 
 ## 🤝 Contributing
 
