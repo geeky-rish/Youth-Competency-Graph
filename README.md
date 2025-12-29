@@ -5,7 +5,7 @@
 
 ## 📖 Overview
 
-**Youth Competency Intelligence Graph** is an advanced career development platform designed to bridge the gap between education and employability. By leveraging a directed acyclic graph (DAG) structure for skill dependencies, the application provides users with personalized learning paths, role readiness assessments, and AI-driven resource recommendations.
+**Youth Competency Intelligence Graph** is an advanced career development platform designed to bridge the gap between education and employability.By leveraging a directed acyclic graph (DAG) structure for skill dependencies, the application provides users with personalized learning paths, role readiness assessments, and AI-driven resource recommendations.
 
 This project goes beyond simple to-do lists by intelligently mapping skills to target roles, visualizing progress through interactive graphs, and assessing cognitive aptitude via an integrated psychometric test suite.
 
