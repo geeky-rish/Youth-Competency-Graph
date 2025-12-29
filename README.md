@@ -58,7 +58,7 @@ This project goes beyond simple to-do lists by intelligently mapping skills to t
 
 ## 🚀 Getting Started
 
-Follow these steps to set up the project locally.
+Follow these steps to set up the project locally:
 
 ### Prerequisites
 - Node.js (v18+ recommended)
@@ -109,7 +109,7 @@ Follow these steps to set up the project locally.
 
 ## 🤝 Contributing
 
-Contributions are welcome!! Please fork the repository and submit a pull request for any enhancements!.
+Contributions are welcome! Please fork the repository and submit a pull request for any enhancements:
 
 1.  Fork the Project
 2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
