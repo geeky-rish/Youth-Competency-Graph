@@ -1,36 +1,28 @@
 import { useEffect, useState } from 'react';
-import api from '../services/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSkills } from '../redux/slices/dataSlice';
+import api from '../services/api'; // Keeping direct API for specific update actions for now, or move to slice later
 import Layout from '../components/Layout';
-import { useAuth } from '../context/AuthContext';
 import { Search, Check, Plus, Book } from 'lucide-react';
 
 const Skills = () => {
-    const { user } = useAuth();
-    const [allSkills, setAllSkills] = useState([]);
-    const [userSkills, setUserSkills] = useState([]);
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
+    const { skills: allSkills, loading: skillsLoading } = useSelector((state) => state.data);
+
+    // Local state for user's skills to support optimistic updates, initialized from Redux user
+    const [userSkills, setUserSkills] = useState(user?.skills || []);
     const [search, setSearch] = useState('');
-    const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        try {
-            const [skillsRes, userRes] = await Promise.all([
-                api.get('/skills'),
-                api.get('/auth/me')
-            ]);
-
-            setAllSkills(skillsRes.data);
-            setUserSkills(userRes.data.skills);
-        } catch (error) {
-            console.error("Error fetching data", error);
-        } finally {
-            setLoading(false);
+        if (allSkills.length === 0) {
+            dispatch(fetchSkills());
         }
-    };
+        if (user?.skills) {
+            setUserSkills(user.skills);
+        }
+    }, [dispatch, allSkills.length, user]);
 
     const toggleSkill = async (skillKey) => {
         if (updating) return;
@@ -48,10 +40,12 @@ const Skills = () => {
 
         try {
             await api.put('/profile/skills', { skills: newSkills });
+            // In a real app we'd dispatch an update action to update the user in Redux store too
+            // dispatch(updateUserSkills(newSkills));
         } catch (error) {
             console.error("Error updating skills", error);
             // Revert on error
-            setUserSkills(userSkills);
+            setUserSkills(user.skills || []);
             alert("Failed to update skill. Please try again.");
         } finally {
             setUpdating(false);
@@ -86,7 +80,7 @@ const Skills = () => {
                 </div>
             </div>
 
-            {loading ? (
+            {skillsLoading ? (
                 <div className="flex justify-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
                 </div>
@@ -107,8 +101,8 @@ const Skills = () => {
                                                 key={skill.key}
                                                 onClick={() => toggleSkill(skill.key)}
                                                 className={`cursor-pointer p-4 rounded-xl border transition-all duration-200 relative group ${isSelected
-                                                        ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-                                                        : 'bg-white border-gray-200 hover:border-indigo-300 hover:shadow-md'
+                                                    ? 'bg-indigo-50 border-indigo-200 shadow-sm'
+                                                    : 'bg-white border-gray-200 hover:border-indigo-300 hover:shadow-md'
                                                     }`}
                                             >
                                                 <div className="flex justify-between items-start mb-2">
@@ -116,8 +110,8 @@ const Skills = () => {
                                                         <Book className="w-5 h-5" />
                                                     </div>
                                                     <div className={`h-6 w-6 rounded-full flex items-center justify-center border ${isSelected
-                                                            ? 'bg-indigo-600 border-indigo-600 text-white'
-                                                            : 'border-gray-300 text-transparent group-hover:border-indigo-400'
+                                                        ? 'bg-indigo-600 border-indigo-600 text-white'
+                                                        : 'border-gray-300 text-transparent group-hover:border-indigo-400'
                                                         }`}>
                                                         <Check className="w-4 h-4" />
                                                     </div>

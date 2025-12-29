@@ -1,10 +1,10 @@
 import Layout from '../components/Layout';
-import { useAuth } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
 import { User, Mail, Shield, Book, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Profile = () => {
-    const { user } = useAuth();
+    const { user } = useSelector((state) => state.auth);
 
     return (
         <Layout>

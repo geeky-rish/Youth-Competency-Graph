@@ -1,13 +1,14 @@
 import { LayoutDashboard, Target, BookOpen, User, Settings, LogOut, ChartBar } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/slices/authSlice';
 
 const Sidebar = () => {
-    const { logout } = useAuth();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        logout();
+        dispatch(logout());
         navigate('/login');
     };
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
+import { registerUser } from '../redux/slices/authSlice';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -8,7 +9,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { register } = useAuth();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -16,10 +17,10 @@ const Register = () => {
         setError('');
         setLoading(true);
         try {
-            await register(name, email, password);
-            navigate('/dashboard');
+            await dispatch(registerUser({ name, email, password })).unwrap();
+            navigate('/verify-otp', { state: { email } });
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed.');
+            setError(err || 'Registration failed.');
         } finally {
             setLoading(false);
         }

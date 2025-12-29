@@ -9,6 +9,7 @@ const learningRoutes = require('./routes/learningRoutes');
 const recommendationRoutes = require('./routes/recommendationRoutes');
 const graphRoutes = require('./routes/graphRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
+const otpRoutes = require('./routes/otpRoutes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/otp', otpRoutes);
 app.use('/api/profile', userRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/roles', roleRoutes);

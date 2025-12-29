@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
+import { loginUser } from '../redux/slices/authSlice';
 import { LogIn } from 'lucide-react';
 
 const Login = () => {
@@ -8,7 +9,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -16,10 +17,10 @@ const Login = () => {
         setError('');
         setLoading(true);
         try {
-            await login(email, password);
+            await dispatch(loginUser({ email, password })).unwrap();
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+            setError(err || 'Login failed. Please check your credentials.');
         } finally {
             setLoading(false);
         }

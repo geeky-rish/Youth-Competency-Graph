@@ -1,33 +1,27 @@
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchRoles } from '../redux/slices/dataSlice';
 import api from '../services/api';
 import Layout from '../components/Layout';
 import { Target, CheckCircle, Circle } from 'lucide-react';
 
 const Roles = () => {
-    const [allRoles, setAllRoles] = useState([]);
-    const [userTargets, setUserTargets] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
+    const { roles: allRoles, loading: rolesLoading } = useSelector((state) => state.data);
+
+    // Local state for user's target roles, init from Redux user
+    const [userTargets, setUserTargets] = useState(user?.targetRoles || []);
     const [updating, setUpdating] = useState(false);
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        try {
-            const [rolesRes, userRes] = await Promise.all([
-                api.get('/roles'),
-                api.get('/auth/me')
-            ]);
-
-            setAllRoles(rolesRes.data);
-            setUserTargets(userRes.data.targetRoles);
-        } catch (error) {
-            console.error("Error fetching data", error);
-        } finally {
-            setLoading(false);
+        if (allRoles.length === 0) {
+            dispatch(fetchRoles());
         }
-    };
+        if (user?.targetRoles) {
+            setUserTargets(user.targetRoles);
+        }
+    }, [dispatch, allRoles.length, user]);
 
     const toggleRole = async (roleKey) => {
         if (updating) return;
@@ -62,7 +56,7 @@ const Roles = () => {
                 <p className="text-gray-500">Choose the career paths you want to pursue.</p>
             </div>
 
-            {loading ? (
+            {rolesLoading ? (
                 <div className="flex justify-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
                 </div>
@@ -75,8 +69,8 @@ const Roles = () => {
                                 key={role.key}
                                 onClick={() => toggleRole(role.key)}
                                 className={`cursor-pointer rounded-xl border p-6 transition-all duration-200 relative ${isSelected
-                                        ? 'bg-emerald-50 border-emerald-200 shadow-md ring-1 ring-emerald-500'
-                                        : 'bg-white border-gray-200 hover:border-emerald-300 hover:shadow-lg'
+                                    ? 'bg-emerald-50 border-emerald-200 shadow-md ring-1 ring-emerald-500'
+                                    : 'bg-white border-gray-200 hover:border-emerald-300 hover:shadow-lg'
                                     }`}
                             >
                                 <div className="flex justify-between items-start">

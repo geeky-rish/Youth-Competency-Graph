@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
     targetRoles: [{
         type: String, // Store role keys
     }],
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
 }, {
     timestamps: true,
 });

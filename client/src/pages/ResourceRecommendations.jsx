@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 
 const ResourceRecommendations = () => {
-    const { user } = useAuth();
+    const { user } = useSelector((state) => state.auth);
     const [recommendations, setRecommendations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api'; // Use centralized API
 import Layout from '../components/Layout';
-import { useAuth } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
 import { TrendingUp, BookOpen, AlertCircle, Award, ArrowRight, Target, Brain } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-    const { user } = useAuth();
+    const { user } = useSelector((state) => state.auth);
     const [roleFit, setRoleFit] = useState([]);
     const [nextSkills, setNextSkills] = useState([]);
     const [psychometricAttempt, setPsychometricAttempt] = useState(null);
